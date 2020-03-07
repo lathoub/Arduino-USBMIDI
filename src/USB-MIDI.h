@@ -55,10 +55,7 @@ public:
             mPacket.header = MAKEHEADER(cableNumber, 0x04);
         }
         
-        mPacket.byte1  = 0;
-        mPacket.byte2  = 0;
-        mPacket.byte3  = 0;
-
+        mPacket.byte1 = mPacket.byte2 = mPacket.byte3  = 0;
         mTxIndex = 0;
 
         return true;
