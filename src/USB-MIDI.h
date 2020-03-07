@@ -15,16 +15,6 @@ using namespace MIDI_NAMESPACE;
 
 class usbMidiTransport
 {
-    // from https://www.usb.org/sites/default/files/midi10.pdf
-    // 4 USB-MIDI Event Packets
-    // Table 4-1: Code Index Number Classifications
-    
-    static uint8_t type2cin[][2] = { {InvalidType,0}, {NoteOff,8}, {NoteOn,9}, {AfterTouchPoly,0xA}, {ControlChange,0xB}, {ProgramChange,0xC}, {AfterTouchChannel,0xD}, {PitchBend,0xE} };
-    
-    static uint8_t system2cin[][2] = { {SystemExclusive,0}, {TimeCodeQuarterFrame,2}, {SongPosition,3}, {SongSelect,2}, {0,0}, {0,0}, {TuneRequest,5}, {SystemExclusiveEnd,0}, {Clock,0xF}, {0,0}, {Start,0xF}, {Continue,0xF}, {Stop,0xF}, {0,0}, {ActiveSensing,0xF}, {SystemReset,0xF} };
-    
-    static byte cin2Len[][2] = { {0,0}, {1,0}, {2,2}, {3,3}, {4,3}, {5,1}, {6,2}, {7,3}, {8,3}, {9,3}, {10,3}, {11,3}, {12,2}, {13,2}, {14,3}, {15,1} };
-
 private:
     byte mTxBuffer[4];
     size_t mTxIndex;
@@ -50,6 +40,13 @@ public:
 
 	bool beginTransmission(MidiType status)
 	{
+        // from https://www.usb.org/sites/default/files/midi10.pdf
+        // 4 USB-MIDI Event Packets
+        // Table 4-1: Code Index Number Classifications
+
+        static uint8_t type2cin[][2] = { {InvalidType,0}, {NoteOff,8}, {NoteOn,9}, {AfterTouchPoly,0xA}, {ControlChange,0xB}, {ProgramChange,0xC}, {AfterTouchChannel,0xD}, {PitchBend,0xE} };
+        
+        static uint8_t system2cin[][2] = { {SystemExclusive,0}, {TimeCodeQuarterFrame,2}, {SongPosition,3}, {SongSelect,2}, {0,0}, {0,0}, {TuneRequest,5}, {SystemExclusiveEnd,0}, {Clock,0xF}, {0,0}, {Start,0xF}, {Continue,0xF}, {Stop,0xF}, {0,0}, {ActiveSensing,0xF}, {SystemReset,0xF} };
 
         mTxStatus = status;
         
@@ -135,6 +132,12 @@ public:
 
 	unsigned available()
 	{
+        // from https://www.usb.org/sites/default/files/midi10.pdf
+        // 4 USB-MIDI Event Packets
+        // Table 4-1: Code Index Number Classifications
+
+        static byte cin2Len[][2] = { {0,0}, {1,0}, {2,2}, {3,3}, {4,3}, {5,1}, {6,2}, {7,3}, {8,3}, {9,3}, {10,3}, {11,3}, {12,2}, {13,2}, {14,3}, {15,1} };
+
         midiEventPacket_t packet = MidiUSB.read();
         if (packet.header != 0)
         {
@@ -169,9 +172,12 @@ public:
 
 /*! \brief
  */
-#define USBMIDI_CREATE_DEFAULT_INSTANCE()  \
+#define USBMIDI_CREATE_INSTANCE(CABLENR)  \
     typedef USBMIDI_NAMESPACE::usbMidiTransport __amt;\
-    __amt USBMIDI;\
-    MIDI_NAMESPACE::MidiInterface<__amt> MIDI((__amt&)USBMIDI);
+    __amt usbMIDI(CABLENR);\
+    MIDI_NAMESPACE::MidiInterface<__amt> MIDI((__amt&)usbMIDI);
+
+#define USBMIDI_CREATE_DEFAULT_INSTANCE()  \
+    USBMIDI_CREATE_INSTANCE(0)
 
 END_USBMIDI_NAMESPACE

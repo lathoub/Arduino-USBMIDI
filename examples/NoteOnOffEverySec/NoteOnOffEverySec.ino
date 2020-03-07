@@ -1,6 +1,6 @@
 #include <USB-MIDI.h>
 
-USBMIDI_CREATE_DEFAULT_INSTANCE();
+USBMIDI_CREATE_INSTANCE(0);
 
 unsigned long t0 = millis();
 
@@ -14,8 +14,8 @@ void setup()
   // Listen for MIDI messages on channel 1
   MIDI.begin(1);
 
-  MIDI.setHandleNoteOn(OnAppleMidiNoteOn);
-  MIDI.setHandleNoteOff(OnAppleMidiNoteOff);
+  MIDI.setHandleNoteOn(OnNoteOn);
+  MIDI.setHandleNoteOff(OnNoteOff);
 }
 
 // -----------------------------------------------------------------------------
@@ -46,17 +46,17 @@ void loop()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static void OnAppleMidiNoteOn(byte channel, byte note, byte velocity) {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+static void OnNoteOn(byte channel, byte note, byte velocity) {
+  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
   delay(100);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static void OnAppleMidiNoteOff(byte channel, byte note, byte velocity) {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+static void OnNoteOff(byte channel, byte note, byte velocity) {
+  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
   delay(100);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
 }
