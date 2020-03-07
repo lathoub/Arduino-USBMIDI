@@ -30,8 +30,6 @@ void setup()
 
   N_DEBUG_PRINTLN(F("Booting"));
 
-  pinMode(LED_BUILTIN, OUTPUT);
-
   // Listen for MIDI messages on channel 1
   MIDI.begin(1);
 
