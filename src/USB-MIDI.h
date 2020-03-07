@@ -51,11 +51,16 @@ public:
         
         byte cin = 0;
         if (status < SystemExclusive)
+        {
             cin = type2cin[((status & 0xF0) >> 4) - 7][1];
+            packet.header = (cableNumber | cin);
+        }
         else
+        {
             cin = system2cin[status & 0x0F][1];
+            packet.header = (cableNumber | 0x04);
+        }
         
-        packet.header = (cableNumber | cin);
         packet.byte1  = 0;
         packet.byte2  = 0;
         packet.byte3  = 0;
@@ -69,29 +74,52 @@ public:
 	{
         if (mStatus != MidiType::SystemExclusive)
         {
-            switch (++mTxIndex)
+            if (mTxIndex == 0)      packet.byte1 = byte;
+            else if (mTxIndex == 1) packet.byte2 = byte;
+            else if (mTxIndex == 2) packet.byte3 = byte;
+        }
+        else if (byte == MidiType::SystemExclusiveStart)
+        {
+            packet.header = (cableNumber | (0x04));
+            packet.byte1 = byte;
+        }
+        else // SystemExclusiveEnd or SysEx data
+        {
+            auto i = mTxIndex % 3;
+            if (byte == MidiType::SystemExclusiveEnd)
+                packet.header = (cableNumber | (0x05 + i));
+            
+            if (i == 0)
             {
-                case 1:
-                    packet.byte1  = byte;
-                    break;
-                case 2:
-                    packet.byte2  = byte;
-                    break;
-                case 3:
-                    packet.byte3  = byte;
-                    break;
+                packet.byte1 = byte;
+                packet.byte2 = 0x00;
+                packet.byte3 = 0x00;
+            }
+            else if (i == 1)
+            {
+                packet.byte2 = byte;
+                packet.byte3 = 0x00;
+            }
+            else if (i == 2)
+            {
+                packet.byte3 = byte;
+                
+                if (byte != MidiType::SystemExclusiveEnd)
+                {
+                    MidiUSB.sendMIDI(packet);
+                    MidiUSB.flush();
+                }
             }
         }
-        else
-        {
-            // sysex
-        }
+        mTxIndex++;
     };
 
 	void endTransmission()
 	{
         MidiUSB.sendMIDI(packet);
         MidiUSB.flush();
+        
+        mTxIndex = 0;
 	};
 
 	byte read()
