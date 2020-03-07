@@ -44,17 +44,15 @@ public:
         mTxStatus = status;
         
         byte cin = 0;
-        if (status < SystemExclusive)
-        {
+        if (status < SystemExclusive) {
             // Non System messages
             cin = type2cin[((status & 0xF0) >> 4) - 7][1];
-            mPacket.header = (((cableNumber & 0x0f) << 4) | cin);
+            mPacket.header = MAKEHEADER(cableNumber, cin);
         }
-        else
-        {
+        else {
             // Only System messages
             cin = system2cin[status & 0x0F][1];
-            mPacket.header = (((cableNumber & 0x0f) << 4) | 0x04);
+            mPacket.header = MAKEHEADER(cableNumber, 0x04);
         }
         
         mPacket.byte1  = 0;
@@ -68,51 +66,35 @@ public:
 
 	void write(byte byte)
 	{
-        if (mTxStatus != MidiType::SystemExclusive)
-        {
+        if (mTxStatus != MidiType::SystemExclusive) {
             if (mTxIndex == 0)      mPacket.byte1 = byte;
             else if (mTxIndex == 1) mPacket.byte2 = byte;
             else if (mTxIndex == 2) mPacket.byte3 = byte;
         }
-        else if (byte == MidiType::SystemExclusiveStart)
-        {
-            mPacket.header = (((cableNumber & 0x0f) << 4) | 0x04);
+        else if (byte == MidiType::SystemExclusiveStart) {
+            mPacket.header = MAKEHEADER(cableNumber, 0x04);
             mPacket.byte1 = byte;
         }
         else // SystemExclusiveEnd or SysEx data
         {
             auto i = mTxIndex % 3;
             if (byte == MidiType::SystemExclusiveEnd)
-                mPacket.header = (((cableNumber & 0x0f) << 4) | (0x05 + i));
+                mPacket.header = MAKEHEADER(cableNumber, (0x05 + i));
             
-            if (i == 0)
-            {
+            if (i == 0) {
                 mPacket.byte1 = byte;
                 mPacket.byte2 = 0x00;
                 mPacket.byte3 = 0x00;
             }
-            else if (i == 1)
-            {
+            else if (i == 1) {
                 mPacket.byte2 = byte;
                 mPacket.byte3 = 0x00;
             }
-            else if (i == 2)
-            {
+            else if (i == 2) {
                 mPacket.byte3 = byte;
                 
                 if (byte != MidiType::SystemExclusiveEnd)
-                {
-                    V_DEBUG_PRINT (mPacket.header, HEX);
-                    V_DEBUG_PRINT (" ");
-                    V_DEBUG_PRINT (mPacket.byte1, HEX);
-                    V_DEBUG_PRINT (" ");
-                    V_DEBUG_PRINT (mPacket.byte2, HEX);
-                    V_DEBUG_PRINT (" ");
-                    V_DEBUG_PRINTLN (mPacket.byte3, HEX);
-
-                    MidiUSB.sendMIDI(mPacket);
-                    MidiUSB.flush();
-                }
+                    SENDMIDI(mPacket);
             }
         }
         mTxIndex++;
@@ -120,30 +102,12 @@ public:
 
 	void endTransmission()
 	{
-        V_DEBUG_PRINT (mPacket.header, HEX);
-        V_DEBUG_PRINT (" ");
-        V_DEBUG_PRINT (mPacket.byte1, HEX);
-        V_DEBUG_PRINT (" ");
-        V_DEBUG_PRINT (mPacket.byte2, HEX);
-        V_DEBUG_PRINT (" ");
-        V_DEBUG_PRINTLN (mPacket.byte3, HEX);
-
-        MidiUSB.sendMIDI(mPacket);
-        MidiUSB.flush();
-        
-        mTxIndex = 0;
+        SENDMIDI(mPacket);
 	};
 
 	byte read()
 	{
-        auto byte = mRxBuffer[mRxIndex++];
-        mRxLength--;
-
-        V_DEBUG_PRINT ("read() ");
-        V_DEBUG_PRINT (byte, HEX);
-        V_DEBUG_PRINT (" mRxBuffer size is ");
-        V_DEBUG_PRINTLN(mRxLength);
-
+        RXBUFFER_POPFRONT(byte);
 		return byte;
 	};
 
@@ -156,46 +120,33 @@ public:
         mRxIndex = 0;
         
         mPacket = MidiUSB.read();
-        if (mPacket.header != 0)
-        {
-            auto cn  = (mPacket.header >> 4);
-            V_DEBUG_PRINT ("cableNr: ");
-            V_DEBUG_PRINTLN(cn);
+        if (mPacket.header != 0) {
+            auto cn  = GETCABLENUMBER(mPacket);
             if (cn != cableNumber)
                 return 0;
-
-            V_DEBUG_PRINT ("available() ");
-            V_DEBUG_PRINT (mPacket.header, HEX);
-            V_DEBUG_PRINT (" ");
-            V_DEBUG_PRINT (mPacket.byte1, HEX);
-            V_DEBUG_PRINT (" ");
-            V_DEBUG_PRINT (mPacket.byte2, HEX);
-            V_DEBUG_PRINT (" ");
-            V_DEBUG_PRINTLN (mPacket.byte3, HEX);
  
-            auto cin = mPacket.header & 0x0f;
+            auto cin = GETCIN(mPacket);
             auto len = cin2Len[cin][1];
-            switch (len)
-            {
+            switch (len) {
                 case 0:
                     if (cin == 0x4 || cin == 0x7)
-                        RXBUFFER3
+                        RXBUFFER_PUSHBACK3
                     else if (cin == 0x5)
-                        RXBUFFER1
+                        RXBUFFER_PUSHBACK1
                     else if (cin == 0x6)
-                        RXBUFFER2
+                        RXBUFFER_PUSHBACK2
                     break;
                 case 1:
-                    RXBUFFER1
+                    RXBUFFER_PUSHBACK1
                     break;
                 case 2:
-                    RXBUFFER2
+                    RXBUFFER_PUSHBACK2
                     break;
                 case 3:
-                    RXBUFFER3
+                    RXBUFFER_PUSHBACK3
                     break;
                 default:
-                    break;
+                    break; // error
             }
         }
 

@@ -16,8 +16,14 @@ static uint8_t system2cin[][2] = { {SystemExclusive,0}, {TimeCodeQuarterFrame,2}
 
 static byte cin2Len[][2] = { {0,0}, {1,0}, {2,2}, {3,3}, {4,0}, {5,0}, {6,0}, {7,0}, {8,3}, {9,3}, {10,3}, {11,3}, {12,2}, {13,2}, {14,3}, {15,1} };
 
-#define RXBUFFER1 { mRxBuffer[mRxLength++] = mPacket.byte1; }
-#define RXBUFFER2 { mRxBuffer[mRxLength++] = mPacket.byte1; mRxBuffer[mRxLength++] = mPacket.byte2; }
-#define RXBUFFER3 { mRxBuffer[mRxLength++] = mPacket.byte1; mRxBuffer[mRxLength++] = mPacket.byte2; mRxBuffer[mRxLength++] = mPacket.byte3; }
+#define GETCABLENUMBER(packet) (packet.header >> 4);
+#define GETCIN(packet) (packet.header & 0x0f);
+#define MAKEHEADER(cn, cin) (((cn & 0x0f) << 4) | cin)
+#define RXBUFFER_PUSHBACK1 { mRxBuffer[mRxLength++] = mPacket.byte1; }
+#define RXBUFFER_PUSHBACK2 { mRxBuffer[mRxLength++] = mPacket.byte1; mRxBuffer[mRxLength++] = mPacket.byte2; }
+#define RXBUFFER_PUSHBACK3 { mRxBuffer[mRxLength++] = mPacket.byte1; mRxBuffer[mRxLength++] = mPacket.byte2; mRxBuffer[mRxLength++] = mPacket.byte3; }
+
+#define RXBUFFER_POPFRONT(byte) auto byte = mRxBuffer[mRxIndex++]; mRxLength--;
+#define SENDMIDI(packet) { MidiUSB.sendMIDI(packet); MidiUSB.flush(); }
 
 END_USBMIDI_NAMESPACE
