@@ -18,16 +18,15 @@ class usbMidiTransport
 private:
     byte mTxBuffer[4];
     size_t mTxIndex;
-    midiEventPacket_t packet;
-    MidiType mStatus;
+    midiEventPacket_t mTxPacket;
+    MidiType mTxStatus;
 
     Deque<byte, 44> mRxBuffer; // 44 is an arbitary number
     
-
     uint8_t cableNumber;
     
 public:
-	usbMidiTransport(uint8_t cableNumber = 0) // cable number?
+	usbMidiTransport(uint8_t cableNumber = 0)
 	{
         this->cableNumber = cableNumber;
 	};
@@ -47,23 +46,23 @@ public:
         static uint8_t type2cin[][2] = { {InvalidType,0}, {NoteOff,8}, {NoteOn,9}, {AfterTouchPoly,0xA}, {ControlChange,0xB}, {ProgramChange,0xC}, {AfterTouchChannel,0xD}, {PitchBend,0xE} };
         static uint8_t system2cin[][2] = { {SystemExclusive,0}, {TimeCodeQuarterFrame,2}, {SongPosition,3}, {SongSelect,2}, {0,0}, {0,0}, {TuneRequest,5}, {SystemExclusiveEnd,0}, {Clock,0xF}, {0,0}, {Start,0xF}, {Continue,0xF}, {Stop,0xF}, {0,0}, {ActiveSensing,0xF}, {SystemReset,0xF} };
 
-        mStatus = status;
+        mTxStatus = status;
         
         byte cin = 0;
         if (status < SystemExclusive)
         {
             cin = type2cin[((status & 0xF0) >> 4) - 7][1];
-            packet.header = (cableNumber | cin);
+            mTxPacket.header = (cableNumber | cin);
         }
         else
         {
             cin = system2cin[status & 0x0F][1];
-            packet.header = (cableNumber | 0x04);
+            mTxPacket.header = (cableNumber | 0x04);
         }
         
-        packet.byte1  = 0;
-        packet.byte2  = 0;
-        packet.byte3  = 0;
+        mTxPacket.byte1  = 0;
+        mTxPacket.byte2  = 0;
+        mTxPacket.byte3  = 0;
 
         mTxIndex = 0;
 
@@ -72,41 +71,41 @@ public:
 
 	void write(byte byte)
 	{
-        if (mStatus != MidiType::SystemExclusive)
+        if (mTxStatus != MidiType::SystemExclusive)
         {
-            if (mTxIndex == 0)      packet.byte1 = byte;
-            else if (mTxIndex == 1) packet.byte2 = byte;
-            else if (mTxIndex == 2) packet.byte3 = byte;
+            if (mTxIndex == 0)      mTxPacket.byte1 = byte;
+            else if (mTxIndex == 1) mTxPacket.byte2 = byte;
+            else if (mTxIndex == 2) mTxPacket.byte3 = byte;
         }
         else if (byte == MidiType::SystemExclusiveStart)
         {
-            packet.header = (cableNumber | (0x04));
-            packet.byte1 = byte;
+            mTxPacket.header = (cableNumber | (0x04));
+            mTxPacket.byte1 = byte;
         }
         else // SystemExclusiveEnd or SysEx data
         {
             auto i = mTxIndex % 3;
             if (byte == MidiType::SystemExclusiveEnd)
-                packet.header = (cableNumber | (0x05 + i));
+                mTxPacket.header = (cableNumber | (0x05 + i));
             
             if (i == 0)
             {
-                packet.byte1 = byte;
-                packet.byte2 = 0x00;
-                packet.byte3 = 0x00;
+                mTxPacket.byte1 = byte;
+                mTxPacket.byte2 = 0x00;
+                mTxPacket.byte3 = 0x00;
             }
             else if (i == 1)
             {
-                packet.byte2 = byte;
-                packet.byte3 = 0x00;
+                mTxPacket.byte2 = byte;
+                mTxPacket.byte3 = 0x00;
             }
             else if (i == 2)
             {
-                packet.byte3 = byte;
+                mTxPacket.byte3 = byte;
                 
                 if (byte != MidiType::SystemExclusiveEnd)
                 {
-                    MidiUSB.sendMIDI(packet);
+                    MidiUSB.sendMIDI(mTxPacket);
                     MidiUSB.flush();
                 }
             }
@@ -116,7 +115,7 @@ public:
 
 	void endTransmission()
 	{
-        MidiUSB.sendMIDI(packet);
+        MidiUSB.sendMIDI(mTxPacket);
         MidiUSB.flush();
         
         mTxIndex = 0;
