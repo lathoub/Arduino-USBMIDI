@@ -1,0 +1,7 @@
+#pragma once
+
+#include "USB-MIDI_Namespace.h"
+
+BEGIN_USBMIDI_NAMESPACE
+
+END_USBMIDI_NAMESPACE
