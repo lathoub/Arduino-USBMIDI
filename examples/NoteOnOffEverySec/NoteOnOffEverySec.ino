@@ -1,7 +1,7 @@
 #define DEBUG 4
 #include <USB-MIDI.h>
 
-USBMIDI_CREATE_INSTANCE(0);
+USBMIDI_CREATE_DEFAULT_INSTANCE();
 
 unsigned long t0 = millis();
 

@@ -17,7 +17,7 @@ byte sysexBig[] = { 0xF0, 0x41,
                     0xF7
                   };
 
-USBMIDI_CREATE_DEFAULT_INSTANCE();
+USBMIDI_CREATE_INSTANCE(4); // use CableNumber 4
 
 unsigned long t0 = millis();
 

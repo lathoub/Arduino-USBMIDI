@@ -82,17 +82,13 @@ public:
                 mPacket.header = MAKEHEADER(cableNumber, (0x05 + i));
             
             if (i == 0) {
-                mPacket.byte1 = byte;
-                mPacket.byte2 = 0x00;
-                mPacket.byte3 = 0x00;
+                mPacket.byte1 = byte; mPacket.byte2 = mPacket.byte3 = 0x00;
             }
             else if (i == 1) {
-                mPacket.byte2 = byte;
-                mPacket.byte3 = 0x00;
+                mPacket.byte2 = byte; mPacket.byte3 = 0x00;
             }
             else if (i == 2) {
                 mPacket.byte3 = byte;
-                
                 if (byte != MidiType::SystemExclusiveEnd)
                     SENDMIDI(mPacket);
             }
