@@ -109,6 +109,14 @@ public:
                 
                 if (byte != MidiType::SystemExclusiveEnd)
                 {
+                    V_DEBUG_PRINT (mTxPacket.header, HEX);
+                    V_DEBUG_PRINT (" ");
+                    V_DEBUG_PRINT (mTxPacket.byte1, HEX);
+                    V_DEBUG_PRINT (" ");
+                    V_DEBUG_PRINT (mTxPacket.byte2, HEX);
+                    V_DEBUG_PRINT (" ");
+                    V_DEBUG_PRINTLN (mTxPacket.byte3, HEX);
+
                     MidiUSB.sendMIDI(mTxPacket);
                     MidiUSB.flush();
                 }
@@ -119,6 +127,14 @@ public:
 
 	void endTransmission()
 	{
+        V_DEBUG_PRINT (mTxPacket.header, HEX);
+        V_DEBUG_PRINT (" ");
+        V_DEBUG_PRINT (mTxPacket.byte1, HEX);
+        V_DEBUG_PRINT (" ");
+        V_DEBUG_PRINT (mTxPacket.byte2, HEX);
+        V_DEBUG_PRINT (" ");
+        V_DEBUG_PRINTLN (mTxPacket.byte3, HEX);
+
         MidiUSB.sendMIDI(mTxPacket);
         MidiUSB.flush();
         
@@ -127,18 +143,27 @@ public:
 
 	byte read()
 	{
-        auto byte = mRxBuffer.pop_back();
-        
+        auto byte = mRxBuffer.pop_front();
+
+        V_DEBUG_PRINT ("read() ");
+        V_DEBUG_PRINT (byte, HEX);
+        V_DEBUG_PRINT (" mRxBuffer size is ");
+        V_DEBUG_PRINTLN(mRxBuffer.size());
+
 		return byte;
 	};
 
 	unsigned available()
 	{
+        // consume mRxBuffer first, before getting a new packet
+        if (mRxBuffer.size() > 0)
+            return mRxBuffer.size();
+
         // from https://www.usb.org/sites/default/files/midi10.pdf
         // 4 USB-MIDI Event Packets
         // Table 4-1: Code Index Number Classifications
 
-        static byte cin2Len[][2] = { {0,0}, {1,0}, {2,2}, {3,3}, {4,3}, {5,1}, {6,2}, {7,3}, {8,3}, {9,3}, {10,3}, {11,3}, {12,2}, {13,2}, {14,3}, {15,1} };
+        static byte cin2Len[][2] = { {0,0}, {1,0}, {2,2}, {3,3}, {4,0}, {5,0}, {6,0}, {7,0}, {8,3}, {9,3}, {10,3}, {11,3}, {12,2}, {13,2}, {14,3}, {15,1} };
 
         midiEventPacket_t packet = MidiUSB.read();
         if (packet.header != 0)
@@ -146,11 +171,43 @@ public:
             auto cn  = packet.header & 0xf0 >> 4;
  //           if (cn != cableNumber)
  //               break;
-                
+
+            V_DEBUG_PRINT ("available() ");
+            V_DEBUG_PRINT (packet.header, HEX);
+            V_DEBUG_PRINT (" ");
+            V_DEBUG_PRINT (packet.byte1, HEX);
+            V_DEBUG_PRINT (" ");
+            V_DEBUG_PRINT (packet.byte2, HEX);
+            V_DEBUG_PRINT (" ");
+            V_DEBUG_PRINTLN (packet.byte3, HEX);
+ 
             auto cin = packet.header & 0x0f;
             auto len = cin2Len[cin][1];
             switch (len)
             {
+                case 0:
+                    if (cin == 0x4)
+                    {
+                        mRxBuffer.push_back(packet.byte1);
+                        mRxBuffer.push_back(packet.byte2);
+                        mRxBuffer.push_back(packet.byte3);
+                    }
+                    else if (cin == 0x5)
+                    {
+                        mRxBuffer.push_back(packet.byte1);
+                    }
+                    else if (cin == 0x6)
+                    {
+                        mRxBuffer.push_back(packet.byte1);
+                        mRxBuffer.push_back(packet.byte2);
+                    }
+                    else if (cin == 0x6)
+                    {
+                        mRxBuffer.push_back(packet.byte1);
+                        mRxBuffer.push_back(packet.byte2);
+                        mRxBuffer.push_back(packet.byte3);
+                    }
+                    break;
                 case 1:
                     mRxBuffer.push_back(packet.byte1);
                     break;
@@ -166,6 +223,12 @@ public:
                 default:
                     break;
             }
+        }
+
+        if (mRxBuffer.size() > 0)
+        {
+            V_DEBUG_PRINT ("available size ");
+            V_DEBUG_PRINTLN (mRxBuffer.size());
         }
 
         return mRxBuffer.size();

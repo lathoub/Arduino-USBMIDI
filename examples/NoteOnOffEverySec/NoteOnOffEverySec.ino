@@ -1,3 +1,4 @@
+#define DEBUG 4
 #include <USB-MIDI.h>
 
 USBMIDI_CREATE_INSTANCE(0);
@@ -9,7 +10,9 @@ unsigned long t0 = millis();
 // -----------------------------------------------------------------------------
 void setup()
 {
-  pinMode(LED_BUILTIN, OUTPUT);
+  DEBUG_BEGIN(115200);
+
+  N_DEBUG_PRINTLN(F("Booting"));
 
   // Listen for MIDI messages on channel 1
   MIDI.begin(1);
@@ -47,16 +50,22 @@ void loop()
 //
 // -----------------------------------------------------------------------------
 static void OnNoteOn(byte channel, byte note, byte velocity) {
-  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-  delay(100);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+  N_DEBUG_PRINT(F("Incoming NoteOn  from channel: "));
+  N_DEBUG_PRINT(channel);
+  N_DEBUG_PRINT(F(", note: "));
+  N_DEBUG_PRINT(note);
+  N_DEBUG_PRINT(F(", velocity: "));
+  N_DEBUG_PRINTLN(velocity);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 static void OnNoteOff(byte channel, byte note, byte velocity) {
-  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-  delay(100);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+  N_DEBUG_PRINT(F("Incoming NoteOff from channel: "));
+  N_DEBUG_PRINT(channel);
+  N_DEBUG_PRINT(F(", note: "));
+  N_DEBUG_PRINT(note);
+  N_DEBUG_PRINT(F(", velocity: "));
+  N_DEBUG_PRINTLN(velocity);
 }
