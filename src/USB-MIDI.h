@@ -7,8 +7,6 @@
 
 #include <USB-MIDI_defs.h>
 
-#include "utility/Deque.h"
-
 #include "USB-MIDI_Namespace.h"
 
 BEGIN_USBMIDI_NAMESPACE
@@ -18,13 +16,13 @@ class usbMidiTransport
 private:
     byte mTxBuffer[4];
     size_t mTxIndex;
-    midiEventPacket_t mPacket;
     MidiType mTxStatus;
 
-   // byte mRxBuffer[4];
-    Deque<byte, 44> mRxBuffer; // 44 is an arbitary number
+    byte mRxBuffer[4];
+    size_t mRxLength;
     size_t mRxIndex;
 
+    midiEventPacket_t mPacket;
     uint8_t cableNumber;
     
 public:
@@ -36,9 +34,9 @@ public:
 public:
 	void begin(MIDI_NAMESPACE::Channel inChannel = 1)
 	{
-        mRxBuffer.clear();
         mTxIndex = 0;
         mRxIndex = 0;
+        mRxLength = 0;
     };
 
 	bool beginTransmission(MidiType status)
@@ -138,12 +136,13 @@ public:
 
 	byte read()
 	{
-        auto byte = mRxBuffer.pop_front();
+        auto byte = mRxBuffer[mRxIndex++];
+        mRxLength--;
 
         V_DEBUG_PRINT ("read() ");
         V_DEBUG_PRINT (byte, HEX);
         V_DEBUG_PRINT (" mRxBuffer size is ");
-        V_DEBUG_PRINTLN(mRxBuffer.size());
+        V_DEBUG_PRINTLN(mRxLength);
 
 		return byte;
 	};
@@ -151,9 +150,11 @@ public:
 	unsigned available()
 	{
         // consume mRxBuffer first, before getting a new packet
-        if (mRxBuffer.size() > 0)
-            return mRxBuffer.size();
+        if (mRxLength > 0)
+            return mRxLength;
 
+        mRxIndex = 0;
+        
         mPacket = MidiUSB.read();
         if (mPacket.header != 0)
         {
@@ -178,45 +179,27 @@ public:
             {
                 case 0:
                     if (cin == 0x4 || cin == 0x7)
-                    {
-                        mRxBuffer.push_back(mPacket.byte1);
-                        mRxBuffer.push_back(mPacket.byte2);
-                        mRxBuffer.push_back(mPacket.byte3);
-                    }
+                        RXBUFFER3
                     else if (cin == 0x5)
-                    {
-                        mRxBuffer.push_back(mPacket.byte1);
-                    }
+                        RXBUFFER1
                     else if (cin == 0x6)
-                    {
-                        mRxBuffer.push_back(mPacket.byte1);
-                        mRxBuffer.push_back(mPacket.byte2);
-                    }
+                        RXBUFFER2
                     break;
                 case 1:
-                    mRxBuffer.push_back(mPacket.byte1);
+                    RXBUFFER1
                     break;
                 case 2:
-                    mRxBuffer.push_back(mPacket.byte1);
-                    mRxBuffer.push_back(mPacket.byte2);
+                    RXBUFFER2
                     break;
                 case 3:
-                    mRxBuffer.push_back(mPacket.byte1);
-                    mRxBuffer.push_back(mPacket.byte2);
-                    mRxBuffer.push_back(mPacket.byte3);
+                    RXBUFFER3
                     break;
                 default:
                     break;
             }
         }
 
-        if (mRxBuffer.size() > 0)
-        {
-            V_DEBUG_PRINT ("available size ");
-            V_DEBUG_PRINTLN (mRxBuffer.size());
-        }
-
-        return mRxBuffer.size();
+        return mRxLength;
 	};
 };
 
