@@ -53,11 +53,13 @@ public:
         byte cin = 0;
         if (status < SystemExclusive)
         {
+            // Non System messages
             cin = type2cin[((status & 0xF0) >> 4) - 7][1];
             mTxPacket.header = (cableNumber | cin);
         }
         else
         {
+            // Only System messages
             cin = system2cin[status & 0x0F][1];
             mTxPacket.header = (cableNumber | 0x04);
         }
