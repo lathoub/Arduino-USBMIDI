@@ -1,4 +1,4 @@
-#define DEBUG 7
+#define DEBUG 4
 #include <USB-MIDI.h>
 
 byte sysex14[] = { 0xF0, 0x43, 0x20, 0x7E, 0x4C, 0x4D, 0x20, 0x20, 0x38, 0x39, 0x37, 0x33, 0x50, 0xF7 };
@@ -53,7 +53,7 @@ void loop()
     t0 = millis();
     //   Serial.print(F(".");
 
-  //  MIDI.sendSysEx(sizeof(sysex14), sysex14, true);
+    MIDI.sendSysEx(sizeof(sysex14), sysex14, true);
   }
 }
 
