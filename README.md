@@ -14,8 +14,16 @@ When manually installing this library, you have to manually download [Arduino MI
 #include <USB-MIDI.h>
 ...
 USBMIDI_CREATE_DEFAULT_INSTANCE();
+...
+void setup()
+{
+   MIDI.begin(1);
+...
+void loop()
+{
+  MIDI.read();
 ```
-will create a instance named `usbMIDI` and is by default connected to cable number 0.
+will create a instance named `usbMIDI` and is by default connected to cable number 0 - and listens to incoming MIDI on channel 1.
 
 ### Modified
 ```cpp
