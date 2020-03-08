@@ -1,4 +1,4 @@
-#define DEBUG 4
+#define DEBUG 7
 #include <USB-MIDI.h>
 
 USBMIDI_CREATE_DEFAULT_INSTANCE();
