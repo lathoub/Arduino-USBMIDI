@@ -2,7 +2,7 @@
 This library implements the USB-MIDI transport layer for the [FortySevenEffects Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) 
 
 ## Installation
-This library depends on the [Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) and [MIDIUSB](https://github.com/arduino-libraries/MIDIUSB).
+This library depends on the [Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) and [Arduino's MIDIUSB](https://github.com/arduino-libraries/MIDIUSB).
 
 When installing this library from the Arduino IDE, both will be downloaded and installed in the same directory as this library. (Thanks to the `depends` clause in `library.properties`)
 
