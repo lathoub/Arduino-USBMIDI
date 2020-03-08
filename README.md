@@ -11,6 +11,9 @@ When manually installing this library, you have to manually download [Arduino MI
 ## Tested boards/modules
 - Arduino Leonardo
 
+## Memory usage
+The library does not add additional buffers and is extremely efficiant and has a small memory footprint.
+
 ## Other Transport protocols:
 - [Arduino AppleMIDI Transport](https://github.com/lathoub/Arduino-AppleMIDI-Library)
 - [Arduino ipMIDI  Transport](https://github.com/lathoub/Arduino-ipMIDI)
