@@ -8,6 +8,33 @@ When installing this library from the Arduino IDE, the [Arduino MIDI Library](ht
 
 When manually installing this library, you have to manually download [Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) from github and install it in the same directory as this library - without this additional install, the library will not be able to compile. 
 
+## Usage
+### Basic / Default
+```cpp
+#include <USB-MIDI.h>
+...
+USBMIDI_CREATE_DEFAULT_INSTANCE();
+```
+will create a instance named `usbMIDI` and is by default connected to cable number 0.
+
+### Modified
+```cpp
+#include <USB-MIDI.h>
+...
+USBMIDI_CREATE_INSTANCE(4);
+```
+will create a instance named `usbMIDI` and is connected to cable number 4.
+
+### Advanced
+```cpp
+#include <USB-MIDI.h>
+...
+typedef USBMIDI_NAMESPACE::usbMidiTransport __umt;
+__umt usbMIDI2(5);
+MIDI_NAMESPACE::MidiInterface<__umt> MIDI2((__umt&)usbMIDI);
+```
+will create a instance named `usbMIDI2` (and underlaying MIDI object `MIDI2`) and is by default connected to cable number 5.
+
 ## Tested boards/modules
 - Arduino Leonardo
 
