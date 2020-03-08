@@ -21,7 +21,7 @@ void setup()
 ...
 void loop()
 {
-  MIDI.read();
+   MIDI.read();
 ```
 will create a instance named `usbMIDI` and is by default connected to cable number 0 - and listens to incoming MIDI on channel 1.
 
