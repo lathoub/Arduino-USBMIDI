@@ -8,7 +8,7 @@ When installing this library from the Arduino IDE, the [FortySevenEffects Arduin
 
 When manually installing this library, you have to manually download [FortySevenEffects Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) from github and install it in the same directory as this library - without this additional install, the library will not be able to compile. 
 
-## Supported boards/modules
+## Tested boards/modules
 - Arduino Leonardo
 
 ## Other Transport protocols:
