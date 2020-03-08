@@ -4,6 +4,9 @@
 USBMIDI_CREATE_DEFAULT_INSTANCE();
 
 unsigned long t0 = millis();
+unsigned long tClock = millis();
+
+using namespace MIDI_NAMESPACE;
 
 // -----------------------------------------------------------------------------
 //
@@ -59,6 +62,12 @@ void loop()
     MIDI.sendNoteOn(note, velocity, channel);
     MIDI.sendNoteOff(note, velocity, channel);
   }
+
+  if ((millis() - tClock) > 20)
+  {
+    tClock = millis();
+    MIDI.sendRealTime(MidiType::Clock);
+  }
 }
 
 
@@ -90,7 +99,7 @@ static void OnAfterTouchPoly(byte channel, byte note, byte pressure) {
   N_DEBUG_PRINT(note);
   N_DEBUG_PRINT(F(", pressure: "));
   N_DEBUG_PRINTLN(pressure);
- }
+}
 
 static void OnControlChange(byte channel, byte number, byte value) {
   N_DEBUG_PRINT(F("ControlChange from channel: "));
