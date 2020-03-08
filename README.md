@@ -50,6 +50,7 @@ will create a instance named `usbMIDI2` (and underlaying MIDI object `MIDI2`) an
 The library does not add additional buffers and is extremely efficiant and has a small memory footprint.
 
 ## Other Transport protocols:
+The libraries below  the same calling mechanism (API), making it easy to interchange the transport layer.
 - [Arduino AppleMIDI Transport](https://github.com/lathoub/Arduino-AppleMIDI-Library)
 - [Arduino ipMIDI  Transport](https://github.com/lathoub/Arduino-ipMIDI)
 - [Arduino BLE-MIDI  Transport](https://github.com/lathoub/Arduino-BLE-MIDI)
