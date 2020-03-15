@@ -53,7 +53,9 @@ public:
         this->cableNumber = cableNumber;
 	};
 
-public:
+    const char* getTransportName() { return "USB-MIDI"; };
+
+protected:
 	void begin(MIDI_NAMESPACE::Channel inChannel = 1)
 	{
         mTxIndex = 0;
