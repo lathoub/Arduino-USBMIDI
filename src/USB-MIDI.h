@@ -35,6 +35,8 @@ BEGIN_USBMIDI_NAMESPACE
 
 class usbMidiTransport
 {
+    friend class MIDI_NAMESPACE::MidiInterface<usbMidiTransport>;
+
 private:
     byte mTxBuffer[4];
     size_t mTxIndex;
@@ -174,9 +176,9 @@ protected:
 /*! \brief
  */
 #define USBMIDI_CREATE_INSTANCE(CABLENR)  \
-    typedef USBMIDI_NAMESPACE::usbMidiTransport __amt;\
-    __amt usbMIDI(CABLENR);\
-    MIDI_NAMESPACE::MidiInterface<__amt> MIDI((__amt&)usbMIDI);
+    typedef USBMIDI_NAMESPACE::usbMidiTransport __umt;\
+    __umt usbMIDI(CABLENR);\
+    MIDI_NAMESPACE::MidiInterface<__umt> MIDI((__umt&)usbMIDI);
 
 #define USBMIDI_CREATE_DEFAULT_INSTANCE()  \
     USBMIDI_CREATE_INSTANCE(0)
