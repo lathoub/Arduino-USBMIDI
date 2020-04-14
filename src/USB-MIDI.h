@@ -22,8 +22,6 @@ SOFTWARE.
 
 #pragma once
 
-#include "utility/Logging.h"
-
 #include <MIDI.h>
 #include <MIDIUSB.h>
 
