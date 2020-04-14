@@ -1,4 +1,3 @@
-#define DEBUG 4
 #include <USB-MIDI.h>
 
 byte sysex14[] = { 0xF0, 0x43, 0x20, 0x7E, 0x4C, 0x4D, 0x20, 0x20, 0x38, 0x39, 0x37, 0x33, 0x50, 0xF7 };
@@ -26,9 +25,8 @@ unsigned long t0 = millis();
 // -----------------------------------------------------------------------------
 void setup()
 {
-  DEBUG_BEGIN(115200);
-
-  N_DEBUG_PRINTLN(F("Booting"));
+  Serial.begin(115200);
+  while (!Serial);
 
   // Listen for MIDI messages on channel 1
   MIDI.begin(1);
@@ -59,13 +57,13 @@ void loop()
 //
 // -----------------------------------------------------------------------------
 void OnMidiSysEx(byte* data, unsigned length) {
-  N_DEBUG_PRINT(F("SYSEX: ("));
-  N_DEBUG_PRINT(length);
-  N_DEBUG_PRINT(F(" bytes) "));
+  Serial.print(F("SYSEX: ("));
+  Serial.print(length);
+  Serial.print(F(" bytes) "));
   for (uint16_t i = 0; i < length; i++)
   {
-    N_DEBUG_PRINT(data[i], HEX);
-    N_DEBUG_PRINT(" ");
+    Serial.print(data[i], HEX);
+    Serial.print(" ");
   }
-  N_DEBUG_PRINTLN();
+  Serial.println();
 }

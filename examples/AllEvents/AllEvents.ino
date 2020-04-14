@@ -1,4 +1,3 @@
-#define DEBUG 7
 #include <USB-MIDI.h>
 
 USBMIDI_CREATE_DEFAULT_INSTANCE();
@@ -13,9 +12,8 @@ using namespace MIDI_NAMESPACE;
 // -----------------------------------------------------------------------------
 void setup()
 {
-  DEBUG_BEGIN(115200);
-
-  N_DEBUG_PRINTLN(F("Booting"));
+  Serial.begin(115200);
+  while (!Serial);
 
   // Listen for MIDI messages on channel 1
   MIDI.begin(1);
@@ -75,105 +73,105 @@ void loop()
 //
 // -----------------------------------------------------------------------------
 static void OnNoteOn(byte channel, byte note, byte velocity) {
-  N_DEBUG_PRINT(F("NoteOn  from channel: "));
-  N_DEBUG_PRINT(channel);
-  N_DEBUG_PRINT(F(", note: "));
-  N_DEBUG_PRINT(note);
-  N_DEBUG_PRINT(F(", velocity: "));
-  N_DEBUG_PRINTLN(velocity);
+  Serial.print(F("NoteOn  from channel: "));
+  Serial.print(channel);
+  Serial.print(F(", note: "));
+  Serial.print(note);
+  Serial.print(F(", velocity: "));
+  Serial.println(velocity);
 }
 
 static void OnNoteOff(byte channel, byte note, byte velocity) {
-  N_DEBUG_PRINT(F("NoteOff from channel: "));
-  N_DEBUG_PRINT(channel);
-  N_DEBUG_PRINT(F(", note: "));
-  N_DEBUG_PRINT(note);
-  N_DEBUG_PRINT(F(", velocity: "));
-  N_DEBUG_PRINTLN(velocity);
+  Serial.print(F("NoteOff from channel: "));
+  Serial.print(channel);
+  Serial.print(F(", note: "));
+  Serial.print(note);
+  Serial.print(F(", velocity: "));
+  Serial.println(velocity);
 }
 
 static void OnAfterTouchPoly(byte channel, byte note, byte pressure) {
-  N_DEBUG_PRINT(F("AfterTouchPoly from channel: "));
-  N_DEBUG_PRINT(channel);
-  N_DEBUG_PRINT(F(", note: "));
-  N_DEBUG_PRINT(note);
-  N_DEBUG_PRINT(F(", pressure: "));
-  N_DEBUG_PRINTLN(pressure);
+  Serial.print(F("AfterTouchPoly from channel: "));
+  Serial.print(channel);
+  Serial.print(F(", note: "));
+  Serial.print(note);
+  Serial.print(F(", pressure: "));
+  Serial.println(pressure);
 }
 
 static void OnControlChange(byte channel, byte number, byte value) {
-  N_DEBUG_PRINT(F("ControlChange from channel: "));
-  N_DEBUG_PRINT(channel);
-  N_DEBUG_PRINT(F(", number: "));
-  N_DEBUG_PRINT(number);
-  N_DEBUG_PRINT(F(", value: "));
-  N_DEBUG_PRINTLN(value);
+  Serial.print(F("ControlChange from channel: "));
+  Serial.print(channel);
+  Serial.print(F(", number: "));
+  Serial.print(number);
+  Serial.print(F(", value: "));
+  Serial.println(value);
 }
 
 static void OnProgramChange(byte channel, byte number) {
-  N_DEBUG_PRINT(F("ProgramChange from channel: "));
-  N_DEBUG_PRINT(channel);
-  N_DEBUG_PRINT(F(", number: "));
-  N_DEBUG_PRINTLN(number);
+  Serial.print(F("ProgramChange from channel: "));
+  Serial.print(channel);
+  Serial.print(F(", number: "));
+  Serial.println(number);
 }
 
 static void OnAfterTouchChannel(byte channel, byte pressure) {
-  N_DEBUG_PRINT(F("AfterTouchChannel from channel: "));
-  N_DEBUG_PRINT(channel);
-  N_DEBUG_PRINT(F(", pressure: "));
-  N_DEBUG_PRINTLN(pressure);
+  Serial.print(F("AfterTouchChannel from channel: "));
+  Serial.print(channel);
+  Serial.print(F(", pressure: "));
+  Serial.println(pressure);
 }
 
 static void OnPitchBend(byte channel, int bend) {
-  N_DEBUG_PRINT(F("PitchBend from channel: "));
-  N_DEBUG_PRINT(channel);
-  N_DEBUG_PRINT(F(", bend: "));
-  N_DEBUG_PRINTLN(bend);
+  Serial.print(F("PitchBend from channel: "));
+  Serial.print(channel);
+  Serial.print(F(", bend: "));
+  Serial.println(bend);
 }
 
 static void OnSystemExclusive(byte * array, unsigned size) {
-  N_DEBUG_PRINTLN(F("SystemExclusive"));
+  Serial.println(F("SystemExclusive"));
 }
 
 static void OnTimeCodeQuarterFrame(byte data) {
-  N_DEBUG_PRINTLN(F("TimeCodeQuarterFrame: "));
-  N_DEBUG_PRINTLN(data, HEX);
+  Serial.print(F("TimeCodeQuarterFrame: "));
+  Serial.println(data, HEX);
 }
 
 static void OnSongPosition(unsigned beats) {
-  N_DEBUG_PRINTLN(F("SongPosition: "));
-  N_DEBUG_PRINTLN(beats);
+  Serial.print(F("SongPosition: "));
+  Serial.println(beats);
 }
 
 static void OnSongSelect(byte songnumber) {
-  N_DEBUG_PRINTLN(F("SongSelect: "));
-  N_DEBUG_PRINTLN(songnumber);
+  Serial.print(F("SongSelect: "));
+  Serial.println(songnumber);
 }
 
 static void OnTuneRequest() {
-  N_DEBUG_PRINTLN(F("TuneRequest"));
+  Serial.println(F("TuneRequest"));
 }
 
 static void OnClock() {
-  N_DEBUG_PRINTLN(F("Clock"));
+  Serial.println(F("Clock"));
 }
 
 static void OnStart() {
-  N_DEBUG_PRINTLN(F("Start"));
+  Serial.println(F("Start"));
 }
 
 static void OnContinue() {
-  N_DEBUG_PRINTLN(F("Continue"));
+  Serial.println(F("Continue"));
 }
 
 static void OnStop() {
-  N_DEBUG_PRINTLN(F("Stop"));
+  Serial.println(F("Stop"));
 }
 
 static void OnActiveSensing() {
-  N_DEBUG_PRINTLN(F("ActiveSensing"));
+  Serial.println(F("ActiveSensing"));
 }
 
 static void OnSystemReset() {
-  N_DEBUG_PRINTLN(F("SystemReset"));
+  Serial.println(F("SystemReset"));
 }

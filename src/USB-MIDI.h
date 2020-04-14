@@ -26,7 +26,6 @@ SOFTWARE.
 #include <MIDIUSB.h>
 
 #include "USB-MIDI_defs.h"
-
 #include "USB-MIDI_Namespace.h"
 
 BEGIN_USBMIDI_NAMESPACE
