@@ -1,5 +1,3 @@
-# Experimental
-   
 # Arduino USB-MIDI Transport 
 This library implements the USB-MIDI transport layer for the [FortySevenEffects Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) 
 
