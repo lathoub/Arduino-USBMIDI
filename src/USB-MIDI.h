@@ -52,8 +52,6 @@ public:
         this->cableNumber = cableNumber;
 	};
 
-    const char* getTransportName() { return "USB-MIDI"; };
-
 protected:
 	void begin()
 	{
