@@ -55,7 +55,7 @@ public:
     const char* getTransportName() { return "USB-MIDI"; };
 
 protected:
-	void begin(MIDI_NAMESPACE::Channel inChannel = 1)
+	void begin()
 	{
         mTxIndex = 0;
         mRxIndex = 0;
