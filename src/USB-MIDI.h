@@ -170,12 +170,11 @@ protected:
 
 /*! \brief
  */
-#define USBMIDI_CREATE_INSTANCE(CABLENR)  \
-    typedef USBMIDI_NAMESPACE::usbMidiTransport __umt;\
-    __umt usbMIDI(CABLENR);\
-    MIDI_NAMESPACE::MidiInterface<__umt> MIDI((__umt&)usbMIDI);
+#define USBMIDI_CREATE_INSTANCE(CableNr, Name)  \
+    USBMIDI_NAMESPACE::usbMidiTransport usb##Name(CableNr);\
+    MIDI_NAMESPACE::MidiInterface<USBMIDI_NAMESPACE::usbMidiTransport> Name((USBMIDI_NAMESPACE::usbMidiTransport&)usb##Name);
 
 #define USBMIDI_CREATE_DEFAULT_INSTANCE()  \
-    USBMIDI_CREATE_INSTANCE(0)
+    USBMIDI_CREATE_INSTANCE(0, MIDI)
 
 END_USBMIDI_NAMESPACE

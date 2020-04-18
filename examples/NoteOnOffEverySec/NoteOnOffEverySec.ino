@@ -22,6 +22,7 @@ void setup()
 {
   Serial.begin(115200);
   while (!Serial);
+  
   MIDI.begin();
   MIDI.setHandleNoteOn(handleNoteOn);
   MIDI.setHandleNoteOff(handleNoteOff);
