@@ -1,4 +1,6 @@
 # Arduino USB-MIDI Transport 
+[![GitHub version](https://badge.fury.io/gh/lathoub%2FArduino-USBMIDI.svg)](https://badge.fury.io/gh/lathoub%2FArduino-USBMIDI)
+
 This library implements the USB-MIDI transport layer for the [FortySevenEffects Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) 
 
 ## Installation
