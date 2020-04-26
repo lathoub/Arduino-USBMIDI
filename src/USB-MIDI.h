@@ -53,6 +53,9 @@ public:
 	};
 
 protected:
+    
+    static const bool thruActivated = false;
+
 	void begin()
 	{
         mTxIndex = 0;
