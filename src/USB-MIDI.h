@@ -32,8 +32,6 @@ BEGIN_USBMIDI_NAMESPACE
 
 class usbMidiTransport
 {
-    friend class MIDI_NAMESPACE::MidiInterface<usbMidiTransport>;
-
 private:
     byte mTxBuffer[4];
     size_t mTxIndex;
@@ -52,7 +50,7 @@ public:
         this->cableNumber = cableNumber;
 	};
 
-protected:
+public:
     
     static const bool thruActivated = false;
 
@@ -171,6 +169,8 @@ protected:
 	};
 };
 
+END_USBMIDI_NAMESPACE
+
 /*! \brief
  */
 #define USBMIDI_CREATE_INSTANCE(CableNr, Name)  \
@@ -179,5 +179,3 @@ protected:
 
 #define USBMIDI_CREATE_DEFAULT_INSTANCE()  \
     USBMIDI_CREATE_INSTANCE(0, MIDI)
-
-END_USBMIDI_NAMESPACE
