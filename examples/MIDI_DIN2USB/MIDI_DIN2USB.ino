@@ -1,13 +1,7 @@
 #include <USB-MIDI.h>
-USING_NAMESPACE_MIDI;
+USING_NAMESPACE_MIDI
 
-typedef USBMIDI_NAMESPACE::usbMidiTransport __umt;
-typedef MIDI_NAMESPACE::MidiInterface<__umt> __ss;
-__umt usbMIDI(0); // cableNr
-__ss MIDICoreUSB((__umt&)usbMIDI);
-
-typedef Message<MIDI_NAMESPACE::DefaultSettings::SysExMaxSize> MidiMessage;
-
+USBMIDI_CREATE_INSTANCE(0, MIDICoreUSB);
 MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDICoreSerial);
 
 // -----------------------------------------------------------------------------
@@ -34,12 +28,12 @@ void loop()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void onUsbMessage(const MidiMessage& message)
+void onUsbMessage(const MidiInterface<USBMIDI_NAMESPACE::usbMidiTransport>::MidiMessage& message)
 {
   MIDICoreSerial.send(message);
 }
 
-void onSerialMessage(const MidiMessage& message)
+void onSerialMessage(const MidiInterface<SerialMIDI<HardwareSerial>>::MidiMessage& message)
 {
   MIDICoreUSB.send(message);
 }
