@@ -25,8 +25,13 @@ unsigned long t0 = millis();
 // -----------------------------------------------------------------------------
 void setup()
 {
+  Serial.begin(115200);
+  while (!Serial);
+
   // Listen for MIDI messages on channel 1
   MIDI.begin(1);
+
+  MIDI.setHandleSystemExclusive(OnMidiSysEx);
 }
 
 // -----------------------------------------------------------------------------
@@ -46,4 +51,19 @@ void loop()
 
     MIDI.sendSysEx(sizeof(sysex14), sysex14, true);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OnMidiSysEx(byte* data, unsigned length) {
+  Serial.print(F("SYSEX: ("));
+  Serial.print(length);
+  Serial.print(F(" bytes) "));
+  for (uint16_t i = 0; i < length; i++)
+  {
+    Serial.print(data[i], HEX);
+    Serial.print(" ");
+  }
+  Serial.println();
 }
