@@ -42,7 +42,6 @@ void loop()
   if ((millis() - t0) > 1000)
   {
     t0 = millis();
-    //   Serial.print(F(".");
 
     MIDI.sendSysEx(sizeof(sysex14), sysex14, true);
   }
