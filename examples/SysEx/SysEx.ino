@@ -37,8 +37,7 @@ void loop()
   // Listen to incoming notes
   MIDI.read();
 
-  // send a note every second
-  // (dont cáll delay(1000) as it will stall the pipeline)
+  // send a SysEx every second
   if ((millis() - t0) > 1000)
   {
     t0 = millis();
