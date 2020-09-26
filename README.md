@@ -42,8 +42,8 @@ will create a instance named `MIDI` (transport instance named `__usbMIDI`) and i
 ```cpp
 #include <USB-MIDI.h>
 ...
-USBMIDI_NAMESPACE::usbMidiTransport usbMIDI(CableNr);
-MIDI_NAMESPACE::MidiInterface<USBMIDI_NAMESPACE::usbMidiTransport> MIDI((USBMIDI_NAMESPACE::usbMidiTransport&)usbMIDI);
+USBMIDI_NAMESPACE::usbMidiTransport usbMIDI2(5);
+MIDI_NAMESPACE::MidiInterface<USBMIDI_NAMESPACE::usbMidiTransport> MIDI2((USBMIDI_NAMESPACE::usbMidiTransport&)usbMIDI2);
 ```
 will create a instance named `usbMIDI2` (and underlaying MIDI object `MIDI2`) and is by default connected to cable number 5.
 
