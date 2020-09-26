@@ -49,6 +49,7 @@ will create a instance named `usbMIDI2` (and underlaying MIDI object `MIDI2`) an
 
 ## Tested boards/modules
 - Arduino Leonardo
+- Teensy 4.1
 
 ## Memory usage
 The library does not add additional buffers and is extremely efficiant and has a small memory footprint.
