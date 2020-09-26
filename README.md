@@ -28,7 +28,7 @@ void loop()
 {
    MIDI.read();
 ```
-will create a instance named `usbMIDI` and is by default connected to cable number 0 - and listens to incoming MIDI on channel 1.
+will create a instance named `MIDI` (transport instance named `__usbMIDI`) and is by default connected to cable number 0 - and listens to incoming MIDI on channel 1.
 
 ### Modified
 ```cpp
@@ -36,19 +36,20 @@ will create a instance named `usbMIDI` and is by default connected to cable numb
 ...
 USBMIDI_CREATE_INSTANCE(4);
 ```
-will create a instance named `usbMIDI` and is connected to cable number 4.
+will create a instance named `MIDI` (transport instance named `__usbMIDI`) and is connected to cable number 4.
 
 ### Advanced
 ```cpp
 #include <USB-MIDI.h>
 ...
-USBMIDI_NAMESPACE::usbMidiTransport usbMIDI(CableNr);
-MIDI_NAMESPACE::MidiInterface<USBMIDI_NAMESPACE::usbMidiTransport> MIDI((USBMIDI_NAMESPACE::usbMidiTransport&)usbMIDI);
+USBMIDI_NAMESPACE::usbMidiTransport usbMIDI2(5);
+MIDI_NAMESPACE::MidiInterface<USBMIDI_NAMESPACE::usbMidiTransport> MIDI2((USBMIDI_NAMESPACE::usbMidiTransport&)usbMIDI2);
 ```
 will create a instance named `usbMIDI2` (and underlaying MIDI object `MIDI2`) and is by default connected to cable number 5.
 
 ## Tested boards/modules
 - Arduino Leonardo
+- Teensy 4.1
 
 ## Memory usage
 The library does not add additional buffers and is extremely efficiant and has a small memory footprint.
