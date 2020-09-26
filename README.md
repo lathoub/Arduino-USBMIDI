@@ -28,7 +28,7 @@ void loop()
 {
    MIDI.read();
 ```
-will create a instance named `usbMIDI` and is by default connected to cable number 0 - and listens to incoming MIDI on channel 1.
+will create a instance named `MIDI` (transport instance named `__usbMIDI`) and is by default connected to cable number 0 - and listens to incoming MIDI on channel 1.
 
 ### Modified
 ```cpp
@@ -36,7 +36,7 @@ will create a instance named `usbMIDI` and is by default connected to cable numb
 ...
 USBMIDI_CREATE_INSTANCE(4);
 ```
-will create a instance named `usbMIDI` and is connected to cable number 4.
+will create a instance named `MIDI` (transport instance named `__usbMIDI`) and is connected to cable number 4.
 
 ### Advanced
 ```cpp
