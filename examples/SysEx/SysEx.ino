@@ -29,6 +29,7 @@ byte sysexBig[] = { 0xF0, 0x41,
 USBMIDI_CREATE_DEFAULT_INSTANCE();
 
 unsigned long t0 = millis();
+unsigned long t1 = millis();
 
 // -----------------------------------------------------------------------------
 //
@@ -47,11 +48,20 @@ void loop()
   // Listen to incoming notes
   MIDI.read();
 
-  // send a SysEx every second
+  // send 10 NoteOn 7 SysEx per second
   if ((millis() - t0) > 100)
   {
     t0 = millis();
 
+    MIDI.sendNoteOn(27, 55, 1);
     MIDI.sendSysEx(sizeof(sysex11), sysex11, true);
+  }
+
+  // send NoteOff every 750ms 
+  if ((millis() - t1) > 750)
+  {
+    t1 = millis();
+
+    MIDI.sendNoteOff(27, 55, 1);
   }
 }
