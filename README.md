@@ -51,7 +51,7 @@ will create a instance named `usbMIDI2` (and underlaying MIDI object `MIDI2`) an
 - Arduino Leonardo
 - Teensy 4.1 (incl MIDI, MIDIx4 and MIDIx16)
 
-### Boards / modules in development
+### Boards / modules in development (help needed)
 - Arduino NANO 33 BLE
 - nRF52832 Bluefruit Feather
 
