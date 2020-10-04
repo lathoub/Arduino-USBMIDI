@@ -47,11 +47,11 @@ MIDI_NAMESPACE::MidiInterface<USBMIDI_NAMESPACE::usbMidiTransport> MIDI2((USBMID
 ```
 will create a instance named `usbMIDI2` (and underlaying MIDI object `MIDI2`) and is by default connected to cable number 5.
 
-## Tested boards/modules
+## Tested boards / modules
 - Arduino Leonardo
 - Teensy 4.1 (incl MIDI, MIDIx4 and MIDIx16)
 
-## In development
+### Boards / modules in development
 - Arduino NANO 33 BLE
 - nRF52832 Bluefruit Feather
 
