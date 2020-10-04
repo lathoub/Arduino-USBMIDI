@@ -51,6 +51,10 @@ will create a instance named `usbMIDI2` (and underlaying MIDI object `MIDI2`) an
 - Arduino Leonardo
 - Teensy 4.1 (incl MIDI, MIDIx4 and MIDIx16)
 
+## In development
+- Arduino NANO 33 BLE
+- nRF52832 Bluefruit Feather
+
 ## Memory usage
 The library does not add additional buffers and is extremely efficiant and has a small memory footprint.
 
