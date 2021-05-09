@@ -74,7 +74,7 @@ public:
         else {
             // Only System messages
             cin = system2cin[status & 0x0F][1];
-            mPacket.header = MAKEHEADER(cableNumber, 0x04);
+            mPacket.header = MAKEHEADER(cableNumber, cin);
         }
         
         mPacket.byte1 = mPacket.byte2 = mPacket.byte3  = 0;
