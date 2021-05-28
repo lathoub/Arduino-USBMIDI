@@ -61,6 +61,10 @@ public:
         mRxLength = 0;
     };
 
+    void end()
+    {
+    }
+
 	bool beginTransmission(MidiType status)
 	{
         mTxStatus = status;
