@@ -3,6 +3,8 @@
 
 This library implements the USB-MIDI transport layer for the [FortySevenEffects Arduino MIDI Library](https://github.com/FortySevenEffects/arduino_midi_library) and uses the underlying [Arduino MIDIUSB](https://github.com/arduino-libraries/MIDIUSB) library (so only devices working with MIDIUSB, will work here).
 
+See also [Adafruit's TinyUSB Library for Arduino](https://github.com/adafruit/Adafruit_TinyUSB_Arduino) for ESP32, mbed_rp2040, ArduinoCore-samd and Pico
+
 ## Installation
 
 <img width="800" alt="Screenshot 2020-04-25 at 09 42 19" src="https://user-images.githubusercontent.com/4082369/80274232-42810b80-86d9-11ea-94f6-643bf5ade5be.png">
